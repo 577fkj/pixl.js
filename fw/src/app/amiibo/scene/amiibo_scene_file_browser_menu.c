@@ -132,7 +132,7 @@ static void amiibo_scene_file_browser_menu_on_selected(mui_list_view_event_t eve
     vfs_driver_t *p_driver = vfs_get_driver(app->current_drive);
     switch (index) {
     case FILE_BROWSER_MENU_CREATE_FOLDER: {
-        mui_text_input_set_header(app->p_text_input, "输入文件夹名:");
+        mui_text_input_set_header(app->p_text_input, "Enter folder name:");
         mui_text_input_set_input_text(app->p_text_input, "");
         mui_text_input_set_event_cb(app->p_text_input, amiibo_scene_file_browser_text_input_create_folder_event_cb);
 
@@ -141,7 +141,7 @@ static void amiibo_scene_file_browser_menu_on_selected(mui_list_view_event_t eve
     }
 
     case FILE_BROWSER_MENU_CREATE_AMIIBO: {
-        mui_text_input_set_header(app->p_text_input, "输入amiibo名:");
+        mui_text_input_set_header(app->p_text_input, "Enter amiibo name:");
         mui_text_input_set_input_text(app->p_text_input, "new.bin");
         mui_text_input_set_event_cb(app->p_text_input, amiibo_scene_file_browser_text_input_create_amiibo_event_cb);
         mui_text_input_set_focus_key(app->p_text_input, ENTER_KEY);
@@ -152,10 +152,10 @@ static void amiibo_scene_file_browser_menu_on_selected(mui_list_view_event_t eve
 
     case FILE_BROWSER_MENU_REMOVE_FOLDER: {
         char msg[64];
-        snprintf(msg, sizeof(msg), "删除 %s 吗?", string_get_cstr(app->current_file));
-        mui_msg_box_set_header(app->p_msg_box, "删除");
+        snprintf(msg, sizeof(msg), "Delete %s ?", string_get_cstr(app->current_file));
+        mui_msg_box_set_header(app->p_msg_box, "Delete");
         mui_msg_box_set_message(app->p_msg_box, msg);
-        mui_msg_box_set_btn_text(app->p_msg_box, "取消", NULL, "删除");
+        mui_msg_box_set_btn_text(app->p_msg_box, "Cancel", NULL, "Delete");
         mui_msg_box_set_btn_focus(app->p_msg_box, 2);
         mui_msg_box_set_event_cb(app->p_msg_box, amiibo_scene_file_browser_menu_msg_box_remove_folder_event_cb);
 
@@ -164,7 +164,7 @@ static void amiibo_scene_file_browser_menu_on_selected(mui_list_view_event_t eve
     } break;
 
     case FILE_BROWSER_MENU_RENAME_FOLDER: {
-        mui_text_input_set_header(app->p_text_input, "输入新名:");
+        mui_text_input_set_header(app->p_text_input, "Enter a new name:");
         mui_text_input_set_input_text(app->p_text_input, string_get_cstr(app->current_file));
         mui_text_input_set_event_cb(app->p_text_input,
                                     amiibo_scene_file_browser_menu_text_input_rename_folder_event_cb);
@@ -187,14 +187,14 @@ void amiibo_scene_file_browser_menu_on_enter(void *user_data) {
 
     mui_list_view_add_item(app->p_list_view, 0xe1c7, string_get_cstr(app->current_file), FILE_BROWSER_MENU_FILE_NAME);
 
-    mui_list_view_add_item(app->p_list_view, 0xe1c8, "新建文件夹..", (void *)FILE_BROWSER_MENU_CREATE_FOLDER);
-    mui_list_view_add_item(app->p_list_view, 0xe1c8, "新建标签..", (void *)FILE_BROWSER_MENU_CREATE_AMIIBO);
+    mui_list_view_add_item(app->p_list_view, 0xe1c8, "New folder..", (void *)FILE_BROWSER_MENU_CREATE_FOLDER);
+    mui_list_view_add_item(app->p_list_view, 0xe1c8, "New tag..", (void *)FILE_BROWSER_MENU_CREATE_AMIIBO);
     if (string_cmp_str(app->current_file, "..") != 0) {
-        mui_list_view_add_item(app->p_list_view, 0xe1c9, "重命名..", (void *)FILE_BROWSER_MENU_RENAME_FOLDER);
-        mui_list_view_add_item(app->p_list_view, 0xe1ca, "删除..", (void *)FILE_BROWSER_MENU_REMOVE_FOLDER);
+        mui_list_view_add_item(app->p_list_view, 0xe1c9, "Rename..", (void *)FILE_BROWSER_MENU_RENAME_FOLDER);
+        mui_list_view_add_item(app->p_list_view, 0xe1ca, "Delete..", (void *)FILE_BROWSER_MENU_REMOVE_FOLDER);
     }
-    mui_list_view_add_item(app->p_list_view, 0xe069, "返回文件列表", (void *)FILE_BROWSER_MENU_BACK_FILE_BROWSER);
-    mui_list_view_add_item(app->p_list_view, 0xe069, "返回主菜单", (void *)FILE_BROWSER_MENU_BACK_MAIN_MENU);
+    mui_list_view_add_item(app->p_list_view, 0xe069, "Return to file list", (void *)FILE_BROWSER_MENU_BACK_FILE_BROWSER);
+    mui_list_view_add_item(app->p_list_view, 0xe069, "Return to main menu", (void *)FILE_BROWSER_MENU_BACK_MAIN_MENU);
 
     mui_list_view_set_selected_cb(app->p_list_view, amiibo_scene_file_browser_menu_on_selected);
     mui_list_view_set_user_data(app->p_list_view, app);

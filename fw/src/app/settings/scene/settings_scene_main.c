@@ -27,7 +27,7 @@ static void settings_scene_main_list_view_on_selected(mui_list_view_event_t even
     switch (selection) {
     case SETTINGS_MAIN_MENU_BACK_LIGHT:
         mui_u8g2_set_backlight(!mui_u8g2_get_backlight());
-        sprintf(txt, "背光设置 [%s]", mui_u8g2_get_backlight() ? "开" : "关");
+        sprintf(txt, "Backlight [%s]", mui_u8g2_get_backlight() ? "on" : "off");
         p_settings->backlight = mui_u8g2_get_backlight();
         string_set_str(p_item->text, txt);
         mui_update(mui());
@@ -47,14 +47,14 @@ static void settings_scene_main_list_view_on_selected(mui_list_view_event_t even
 
     case SETTINGS_MAIN_MENU_SKIP_DRIVER_SELECT:
         p_settings->skip_driver_select = !p_settings->skip_driver_select;
-        sprintf(txt, "自动选择存储 [%s]", p_settings->skip_driver_select ? "开" : "关");
+        sprintf(txt, "Auto select [%s]", p_settings->skip_driver_select ? "on" : "off");
         string_set_str(p_item->text, txt);
         mui_update(mui());
         break;
 
     case SETTINGS_MAIN_MENU_LI_MODE:
         p_settings->li_mode = !p_settings->li_mode;
-        sprintf(txt, "锂电池模式 [%s]", p_settings->li_mode ? "开" : "关");
+        sprintf(txt, "Lithium battery [%s]", p_settings->li_mode ? "on" : "off");
         string_set_str(p_item->text, txt);
         mui_update(mui());
         break;
@@ -69,23 +69,23 @@ void settings_scene_main_on_enter(void *user_data) {
 
     app_settings_t *app = user_data;
     char txt[32];
-    sprintf(txt, "版本 [%s]", version_get_version(version_get()));
+    sprintf(txt, "Version [%s]", version_get_version(version_get()));
     mui_list_view_add_item(app->p_list_view, 0xe1c7, txt, (void *)SETTINGS_MAIN_MENU_VERSION);
 
     settings_data_t* p_settings = settings_get_data();
-    sprintf(txt, "自动选择存储 [%s]", p_settings->skip_driver_select ? "开" : "关");
+    sprintf(txt, "Auto select [%s]", p_settings->skip_driver_select ? "on" : "off");
     mui_list_view_add_item(app->p_list_view, 0xe146, txt, (void *)SETTINGS_MAIN_MENU_SKIP_DRIVER_SELECT);
 
-    sprintf(txt, "背光设置 [%s]", mui_u8g2_get_backlight() ? "开" : "关");
+    sprintf(txt, "Backlight [%s]", mui_u8g2_get_backlight() ? "on" : "off");
     mui_list_view_add_item(app->p_list_view, 0xe1c8, txt, (void *)SETTINGS_MAIN_MENU_BACK_LIGHT);
 
-    sprintf(txt, "锂电池模式 [%s]", mui_u8g2_get_backlight() ? "开" : "关");
+    sprintf(txt, "Lithium battery [%s]", mui_u8g2_get_backlight() ? "on" : "off");
     mui_list_view_add_item(app->p_list_view, 0xe08f, txt, (void *)SETTINGS_MAIN_MENU_LI_MODE);
 
-    sprintf(txt, "休眠时间 [%ds]", nrf_pwr_mgmt_get_timeout());
+    sprintf(txt, "Sleep time [%ds]", nrf_pwr_mgmt_get_timeout());
     mui_list_view_add_item(app->p_list_view, 0xe1c9, txt, (void *)SETTINGS_MAIN_MENU_SLEEP_TIMEOUT);
-    mui_list_view_add_item(app->p_list_view, 0xe1ca, "固件更新", (void *)SETTINGS_MAIN_MENU_DFU);
-    mui_list_view_add_item(app->p_list_view, 0xe069, "返回主菜单", (void *)SETTINGS_MAIN_MENU_EXIT);
+    mui_list_view_add_item(app->p_list_view, 0xe1ca, "DFU update", (void *)SETTINGS_MAIN_MENU_DFU);
+    mui_list_view_add_item(app->p_list_view, 0xe069, "Return to main menu", (void *)SETTINGS_MAIN_MENU_EXIT);
 
     mui_list_view_set_selected_cb(app->p_list_view, settings_scene_main_list_view_on_selected);
 

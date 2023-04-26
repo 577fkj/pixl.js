@@ -67,19 +67,19 @@ void amiibo_scene_storage_list_menu_on_enter(void *user_data) {
     char txt[64];
     if (res == VFS_OK) {
         mui_list_view_add_item(app->p_list_view, 0xe1ca,
-                               stat.avaliable ? "=====已挂载=====" : "=====未挂载=====", (void *)-1);
+                               stat.avaliable ? "=====Mount=====" : "=====Unmounted=====", (void *)-1);
         if (stat.avaliable) {
-            snprintf(txt, sizeof(txt), "总空间: %d kB", stat.total_bytes / 1024);
+            snprintf(txt, sizeof(txt), "Total space: %d kB", stat.total_bytes / 1024);
             mui_list_view_add_item(app->p_list_view, 0xe1cb, txt, (void *)-1);
-            snprintf(txt, sizeof(txt), "可用空间: %d kB", stat.free_bytes / 1024);
+            snprintf(txt, sizeof(txt), "Free space: %d kB", stat.free_bytes / 1024);
             mui_list_view_add_item(app->p_list_view, 0xe1cc, txt, (void *)-1);
         }
     }
 
-    mui_list_view_add_item(app->p_list_view, 0xe1cd, "格式化", (void *)STORAGE_LIST_MENU_FORMAT);
+    mui_list_view_add_item(app->p_list_view, 0xe1cd, "Format", (void *)STORAGE_LIST_MENU_FORMAT);
 
-    mui_list_view_add_item(app->p_list_view, 0xe069, "返回列表", (void *)STORAGE_LIST_MENU_BACK);
-    mui_list_view_add_item(app->p_list_view, ICON_HOME, "返回主菜单", (void *)STORAGE_LIST_MENU_BACK_MAIN_MENU);
+    mui_list_view_add_item(app->p_list_view, 0xe069, "Return to List", (void *)STORAGE_LIST_MENU_BACK);
+    mui_list_view_add_item(app->p_list_view, ICON_HOME, "Return to main menu", (void *)STORAGE_LIST_MENU_BACK_MAIN_MENU);
 
     mui_list_view_set_selected_cb(app->p_list_view, amiibo_scene_storage_list_menu_on_selected);
     mui_list_view_set_user_data(app->p_list_view, app);

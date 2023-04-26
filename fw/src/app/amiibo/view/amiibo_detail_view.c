@@ -52,7 +52,7 @@ static void amiibo_detail_view_on_draw(mui_view_t *p_view, mui_canvas_t *p_canva
         sprintf(buff, "[%08x:%08x]", head, tail);
         mui_canvas_draw_utf8(p_canvas, 0, y += 15, buff);
     } else {
-        mui_canvas_draw_utf8(p_canvas, 0, y += 13, "空标签");
+        mui_canvas_draw_utf8(p_canvas, 0, y += 13, "Empty Tag");
     }
 }
 

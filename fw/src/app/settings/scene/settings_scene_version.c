@@ -32,7 +32,7 @@ void settings_scene_version_on_enter(void *user_data) {
     sprintf(txt, "Dirty [%d]", version_get_dirty_flag(NULL));
     mui_list_view_add_item(app->p_list_view, 0xe1cc, txt, (void *)0xFF);
 
-    mui_list_view_add_item(app->p_list_view, 0xe1cd, "返回", (void *)0);
+    mui_list_view_add_item(app->p_list_view, 0xe1cd, "Back", (void *)0);
 
     mui_list_view_set_selected_cb(app->p_list_view, settings_scene_version_list_view_on_selected);
 
