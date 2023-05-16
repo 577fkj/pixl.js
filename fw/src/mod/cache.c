@@ -11,49 +11,51 @@
 
 #include "nrf_pwr_mgmt.h"
 #include "settings.h"
+#include "crc32.h"
+
+#define NOINIT_RAM_INDEX 1
+
+
+extern int32_t __start_noinit;
+extern int32_t __stop_noinit;
 
 static __attribute__((section(".noinit"))) cache_data_t m_cache_data;
+static __attribute__((section(".noinit"))) int32_t m_cache_crc32;
 
-int32_t cache_init() {
-    if (m_cache_data.enabled != 1 && m_cache_data.enabled != 0) {
-        cache_clean();
-    }
-    return NRF_SUCCESS;
+bool cache_valid(){
+    NRF_LOG_INFO("noinit area: [0x%X, 0x%X], %d bytes",  &__start_noinit, &__stop_noinit, (&__stop_noinit - &__start_noinit));
+    NRF_LOG_INFO("m_cache_data address: 0x%X", &m_cache_data);
+    return m_cache_crc32 == crc32_compute(&m_cache_data, sizeof(cache_data_t), NULL);
 }
 
 int32_t cache_clean() {
     NRF_LOG_INFO("Cleaning cache...")
     // 重置一下noinit ram区域
-    uint32_t *noinit_addr = (uint32_t *)0x2000FC00;
-    memset(noinit_addr, 0xFF, 0x400);
+    uint32_t *noinit_addr = &__start_noinit;
+    size_t noinit_size = (&__stop_noinit - &__start_noinit);
+    memset(noinit_addr, 0x0, noinit_size);
+    m_cache_crc32 = crc32_compute(&m_cache_data, sizeof(cache_data_t), NULL);
+
     NRF_LOG_INFO("Reset noinit ram done.");
-    m_cache_data.enabled = 0;
-    m_cache_data.id = 0;
-    memset(m_cache_data.retain_data, 0, sizeof(uint8_t[CACHEDATASIZE]));
-    memset(&(m_cache_data.ntag), 0, sizeof(ntag_t));
     return NRF_SUCCESS;
 }
 
 int32_t cache_save() {
-    if (m_cache_data.id == 0 || cache_empty(m_cache_data.retain_data)) {
-        return NRF_SUCCESS;
-    }
-    m_cache_data.enabled = 1;
     NRF_LOG_INFO("Saving cache...");
+    m_cache_crc32 = crc32_compute(&m_cache_data, sizeof(cache_data_t), NULL);
     NRF_LOG_INFO("Cache data: enabled = %d, id = %d", m_cache_data.enabled, m_cache_data.id);
+
+    //set ram retention
+    uint32_t ram1_power = 0;
+    sd_power_ram_power_get(NOINIT_RAM_INDEX, &ram1_power);
+    NRF_LOG_INFO("RAM1 power: 0x%X", ram1_power);
+    ram1_power = POWER_RAM_POWER_S0RETENTION_On << POWER_RAM_POWER_S0RETENTION_Pos;
+    sd_power_ram_power_set(NOINIT_RAM_INDEX, ram1_power);
+
     return NRF_SUCCESS;
 }
 
 cache_data_t *cache_get_data() {
-    NRF_LOG_INFO("Cache data: enabled = %d, id = %d",
-                 m_cache_data.enabled, m_cache_data.id);
-    cache_init();
+    NRF_LOG_INFO("Cache data: enabled = %d, id = %d", m_cache_data.enabled, m_cache_data.id);
     return &m_cache_data;
-}
-
-bool cache_empty(uint8_t *data) {
-    if (data == NULL) {
-        return false;
-    }
-    return memcmp(data, (uint8_t[CACHEDATASIZE]) {0}, CACHEDATASIZE) == 0;
 }

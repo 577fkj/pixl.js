@@ -28,7 +28,8 @@ void amiibolink_scene_menu_mode_on_enter(void *user_data) {
 
     mui_list_view_add_item(app->p_list_view, ICON_BACK, ">>Back<<", (void *)-1);
 
-    mui_list_view_add_item(app->p_list_view, ICON_MODE, "Random pattern", (void *)BLE_AMIIBOLINK_MODE_RANDOM);
+    mui_list_view_add_item(app->p_list_view, ICON_MODE, "Random(Manual)", (void *)BLE_AMIIBOLINK_MODE_RANDOM);
+    mui_list_view_add_item(app->p_list_view, ICON_MODE, "Random(Auto)", (void *)BLE_AMIIBOLINK_MODE_RANDOM_AUTO_GEN);
     mui_list_view_add_item(app->p_list_view, ICON_MODE, "Sequential mode", (void *)BLE_AMIIBOLINK_MODE_CYCLE);
     mui_list_view_add_item(app->p_list_view, ICON_MODE, "Read-write mode", (void *)BLE_AMIIBOLINK_MODE_NTAG);
     mui_list_view_set_focus(app->p_list_view, app->amiibolink_mode);

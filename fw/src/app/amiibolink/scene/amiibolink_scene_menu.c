@@ -14,9 +14,11 @@
 #define ICON_BACK 0xe069
 #define ICON_HOME 0xe1f0
 #define ICON_AUTO 0xe11f
+#define ICON_PROTO 0xe042
 #define ICON_VER 0xe0be
 
-const char *mode_name[] = {"", "Random", "Sequential", "Read-write"};
+
+const char *mode_name[] = {"", "Random(Manual)", "Sequential", "Read-write(Auto)"};
 
 #define AMIIBOLINK_MENU_BACK_EXIT 0
 #define AMIIBOLINK_MENU_BACK_MAIN 1

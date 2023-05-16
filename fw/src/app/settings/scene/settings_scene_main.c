@@ -1,16 +1,18 @@
 #include "app_settings.h"
 #include "mini_app_launcher.h"
 #include "nrf_pwr_mgmt.h"
+#include "settings.h"
 #include "settings_scene.h"
 #include "utils.h"
 #include "version2.h"
-#include "settings.h"
 
 enum settings_main_menu_t {
     SETTINGS_MAIN_MENU_VERSION,
     SETTINGS_MAIN_MENU_BACK_LIGHT,
     SETTINGS_MAIN_MENU_LI_MODE,
+    SETTINGS_MAIN_MENU_ENABLE_HIBERNATE,
     SETTINGS_MAIN_MENU_SKIP_DRIVER_SELECT,
+    SETTINGS_MAIN_MENU_SHOW_MEM_USAGE,
     SETTINGS_MAIN_MENU_SLEEP_TIMEOUT,
     SETTINGS_MAIN_MENU_DFU,
     SETTINGS_MAIN_MENU_EXIT
@@ -21,16 +23,12 @@ static void settings_scene_main_list_view_on_selected(mui_list_view_event_t even
     app_settings_t *app = p_list_view->user_data;
     char txt[32];
 
-    settings_data_t* p_settings = settings_get_data();
+    settings_data_t *p_settings = settings_get_data();
 
     uint32_t selection = (uint32_t)p_item->user_data;
     switch (selection) {
     case SETTINGS_MAIN_MENU_BACK_LIGHT:
-        mui_u8g2_set_backlight(!mui_u8g2_get_backlight());
-        sprintf(txt, "Backlight [%s]", mui_u8g2_get_backlight() ? "on" : "off");
-        p_settings->backlight = mui_u8g2_get_backlight();
-        string_set_str(p_item->text, txt);
-        mui_update(mui());
+        mui_scene_dispatcher_next_scene(app->p_scene_dispatcher, SETTINGS_SCENE_LCD_BACKLIGHT);
         break;
 
     case SETTINGS_MAIN_MENU_VERSION:
@@ -53,8 +51,22 @@ static void settings_scene_main_list_view_on_selected(mui_list_view_event_t even
         break;
 
     case SETTINGS_MAIN_MENU_LI_MODE:
-        p_settings->li_mode = !p_settings->li_mode;
-        sprintf(txt, "Lithium battery [%s]", p_settings->li_mode ? "on" : "off");
+        p_settings->bat_mode = !p_settings->bat_mode;
+        sprintf(txt, "Lithium battery [%s]", p_settings->bat_mode ? "on" : "off");
+        string_set_str(p_item->text, txt);
+        mui_update(mui());
+        break;
+
+    case SETTINGS_MAIN_MENU_SHOW_MEM_USAGE:
+        p_settings->show_mem_usage = !p_settings->show_mem_usage;
+        sprintf(txt, "Memory usage [%s]", p_settings->show_mem_usage ? "on" : "off");
+        string_set_str(p_item->text, txt);
+        mui_update(mui());
+        break;
+
+    case SETTINGS_MAIN_MENU_ENABLE_HIBERNATE:
+        p_settings->hibernate_enabled = !p_settings->hibernate_enabled;
+        sprintf(txt, "Quick Wake-Up [%s]", p_settings->hibernate_enabled ? "on" : "off");
         string_set_str(p_item->text, txt);
         mui_update(mui());
         break;
@@ -72,17 +84,29 @@ void settings_scene_main_on_enter(void *user_data) {
     sprintf(txt, "Version [%s]", version_get_version(version_get()));
     mui_list_view_add_item(app->p_list_view, 0xe1c7, txt, (void *)SETTINGS_MAIN_MENU_VERSION);
 
-    settings_data_t* p_settings = settings_get_data();
-    sprintf(txt, "Auto select [%s]", p_settings->skip_driver_select ? "on" : "off");
+
+    settings_data_t *p_settings = settings_get_data();
+    sprintf(txt, "Auto select [%s]", p_settings->skip_driver_select ? "开" : "关");
     mui_list_view_add_item(app->p_list_view, 0xe146, txt, (void *)SETTINGS_MAIN_MENU_SKIP_DRIVER_SELECT);
 
-    sprintf(txt, "Backlight [%s]", mui_u8g2_get_backlight() ? "on" : "off");
+    if (p_settings->lcd_backlight == 0) {
+        sprintf(txt, "Backlight [关]");
+    } else {
+        sprintf(txt, "Backlight [%d%%]", p_settings->lcd_backlight);
+    }
     mui_list_view_add_item(app->p_list_view, 0xe1c8, txt, (void *)SETTINGS_MAIN_MENU_BACK_LIGHT);
 
-    sprintf(txt, "Lithium battery [%s]", mui_u8g2_get_backlight() ? "on" : "off");
+    sprintf(txt, "Lithium battery [%s]", p_settings->bat_mode ? "开" : "关");
     mui_list_view_add_item(app->p_list_view, 0xe08f, txt, (void *)SETTINGS_MAIN_MENU_LI_MODE);
 
+    sprintf(txt, "Memory usage [%s]", p_settings->show_mem_usage ? "开" : "关");
+    mui_list_view_add_item(app->p_list_view, 0xe1f3, txt, (void *)SETTINGS_MAIN_MENU_SHOW_MEM_USAGE);
+
+    sprintf(txt, "Quick Wake-Up [%s]", p_settings->hibernate_enabled ? "开" : "关");
+    mui_list_view_add_item(app->p_list_view, 0xe232, txt, (void *)SETTINGS_MAIN_MENU_ENABLE_HIBERNATE);
+
     sprintf(txt, "Sleep time [%ds]", nrf_pwr_mgmt_get_timeout());
+
     mui_list_view_add_item(app->p_list_view, 0xe1c9, txt, (void *)SETTINGS_MAIN_MENU_SLEEP_TIMEOUT);
     mui_list_view_add_item(app->p_list_view, 0xe1ca, "DFU update", (void *)SETTINGS_MAIN_MENU_DFU);
     mui_list_view_add_item(app->p_list_view, 0xe069, "Return to main menu", (void *)SETTINGS_MAIN_MENU_EXIT);

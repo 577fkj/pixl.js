@@ -6,7 +6,8 @@
 #include "ntag_def.h"
 #include "vfs.h"
 
-#define CACHEDATASIZE 316
+#define CACHEDATASIZE 312
+#define CACHE_MAGIC 0x564D5649
 
 typedef struct {
     int32_t enabled;
@@ -15,12 +16,9 @@ typedef struct {
     uint8_t retain_data[CACHEDATASIZE];
 } cache_data_t;
 
-bool cache_empty(uint8_t *data);
-
-int32_t cache_init();
 int32_t cache_clean();
 int32_t cache_save();
 cache_data_t *cache_get_data();
-uint8_t *get_empty_data();
+bool cache_valid();
 
 #endif /* CACHE_H_ */

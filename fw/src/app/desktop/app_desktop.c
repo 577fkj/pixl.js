@@ -20,7 +20,6 @@ typedef struct {
 } app_desktop_t;
 
 static void app_desktop_list_view_on_selected(mui_list_view_event_t event, mui_list_view_t *p_view, mui_list_item_t *p_item) {
-    cache_clean();
     mini_app_launcher_run(mini_app_launcher(), (uint32_t)p_item->user_data);
 }
 
@@ -45,11 +44,6 @@ void app_desktop_on_run(mini_app_inst_t *p_app_inst) {
                                  mui_list_view_get_view(p_app_handle->p_list_view));
     mui_view_dispatcher_attach(p_app_handle->p_view_dispatcher, MUI_LAYER_DESKTOP);
     mui_view_dispatcher_switch_to_view(p_app_handle->p_view_dispatcher, DESKTOP_VIEW_ID_MAIN);
-
-    cache_data_t *p_cache_data = cache_get_data();
-    if (p_cache_data->enabled == 1) {
-        mini_app_launcher_run_with_retain_data(mini_app_launcher(), p_cache_data->id, cache_get_data()->retain_data);
-    }
 }
 
 void app_desktop_on_kill(mini_app_inst_t *p_app_inst) {
@@ -71,6 +65,7 @@ const mini_app_t app_desktop_info = {.id = MINI_APP_ID_DESKTOP,
                                      .icon = 0xe1f0,
                                      .deamon = false,
                                      .sys = true,
+                                     .hibernate_enabled = false,
                                      .run_cb = app_desktop_on_run,
                                      .kill_cb = app_desktop_on_kill,
                                      .on_event_cb = app_desktop_on_event};
