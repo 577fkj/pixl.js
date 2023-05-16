@@ -87,7 +87,7 @@ void amiibolink_scene_menu_on_enter(void *user_data) {
     sprintf(txt, "Auto generation [%s]", p_settings->auto_gen_amiibolink ? "on" : "off");
     mui_list_view_add_item(app->p_list_view, ICON_AUTO, txt, (void *)AMIIBOLINK_MENU_AUTO_GENERATE);
     
-    sprintf(txt, "Compatible mode [%s]", p_settings->amiibo_link_mode == BLE_AMIIBOLINK_VER_V2 ? "V2" : "V1");
+    sprintf(txt, "Compatible mode [%s]", p_settings->amiibo_link_ver == BLE_AMIIBOLINK_VER_V2 ? "V2" : "V1");
     mui_list_view_add_item(app->p_list_view, ICON_AUTO, txt, (void *)AMIIBOLINK_MENU_VER);
     mui_list_view_add_item(app->p_list_view, ICON_VER, "Tag Details", (void *)AMIIBOLINK_MENU_BACK_MAIN);
     
