@@ -30,16 +30,16 @@ static void amiibo_scene_amiibo_detail_reload_error(app_amiibo_t *app, const cha
     strcpy(msg, path);
     strcat(msg, "\n");
     if (err_code == NRF_ERR_NOT_AMIIBO) {
-        strcat(msg, "这不是Amiibo文件");
+        strcat(msg, "This not Amiibo file");
     } else if (err_code == NRF_ERR_READ_ERROR) {
-        strcat(msg, "读取文件失败");
+        strcat(msg, "fail to read file");
     } else {
-        strcat(msg, "读取文件失败");
+        strcat(msg, "fail to read file");
     }
 
-    mui_msg_box_set_header(app->p_msg_box, "错误");
+    mui_msg_box_set_header(app->p_msg_box, "Error");
     mui_msg_box_set_message(app->p_msg_box, msg);
-    mui_msg_box_set_btn_text(app->p_msg_box, NULL, "返回", NULL);
+    mui_msg_box_set_btn_text(app->p_msg_box, NULL, "Back", NULL);
     mui_msg_box_set_btn_focus(app->p_msg_box, 1);
     mui_msg_box_set_event_cb(app->p_msg_box, amiibo_scene_amiibo_detail_msg_box_error_cb);
 
