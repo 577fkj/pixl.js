@@ -4,8 +4,8 @@
 #include "mui_list_view.h"
 #include "nrf_log.h"
 #include "ntag_def.h"
-#include "vfs.h"
 #include "ntag_store.h"
+#include "vfs.h"
 
 #include "mini_app_launcher.h"
 #include "mini_app_registry.h"
@@ -93,25 +93,24 @@ static void amiibo_scene_file_browser_menu_text_input_rename_folder_event_cb(mui
             if (res == VFS_OK) {
                 renamed = true;
             }
-        }else{
-            //ignore error
+        } else {
+            // ignore error
             renamed = true;
         }
 
         if (renamed) {
             mui_scene_dispatcher_next_scene(app->p_scene_dispatcher, AMIIBO_SCENE_FILE_BROWSER);
-        }else{
+        } else {
             char msg[32];
-            sprintf(msg, "重命名失败\n错误码:%d", res);
-            mui_msg_box_set_header(app->p_msg_box, "错误");
+            sprintf(msg, "Rinomina codice\nerror fallito:%d", res);
+            mui_msg_box_set_header(app->p_msg_box, "errore");
             mui_msg_box_set_message(app->p_msg_box, msg);
-            mui_msg_box_set_btn_text(app->p_msg_box, NULL, "返回", NULL);
+            mui_msg_box_set_btn_text(app->p_msg_box, NULL, "ritorno", NULL);
             mui_msg_box_set_btn_focus(app->p_msg_box, 1);
             mui_msg_box_set_event_cb(app->p_msg_box, amiibo_scene_scene_file_browser_menu_msg_box_error_cb);
 
             mui_view_dispatcher_switch_to_view(app->p_view_dispatcher, AMIIBO_VIEW_ID_MSG_BOX);
         }
-
     }
 }
 
@@ -152,7 +151,7 @@ static void amiibo_scene_file_browser_menu_on_selected(mui_list_view_event_t eve
     vfs_driver_t *p_driver = vfs_get_driver(app->current_drive);
     switch (index) {
     case FILE_BROWSER_MENU_CREATE_FOLDER: {
-        mui_text_input_set_header(app->p_text_input, "输入文件夹名:");
+        mui_text_input_set_header(app->p_text_input, "Nome cartella:");
         mui_text_input_set_input_text(app->p_text_input, "");
         mui_text_input_set_event_cb(app->p_text_input, amiibo_scene_file_browser_text_input_create_folder_event_cb);
 
@@ -161,7 +160,7 @@ static void amiibo_scene_file_browser_menu_on_selected(mui_list_view_event_t eve
     }
 
     case FILE_BROWSER_MENU_CREATE_AMIIBO: {
-        mui_text_input_set_header(app->p_text_input, "输入amiibo名:");
+        mui_text_input_set_header(app->p_text_input, "Nome Amiibo:");
         mui_text_input_set_input_text(app->p_text_input, "new.bin");
         mui_text_input_set_event_cb(app->p_text_input, amiibo_scene_file_browser_text_input_create_amiibo_event_cb);
         mui_text_input_set_focus_key(app->p_text_input, ENTER_KEY);
@@ -172,10 +171,10 @@ static void amiibo_scene_file_browser_menu_on_selected(mui_list_view_event_t eve
 
     case FILE_BROWSER_MENU_REMOVE_FOLDER: {
         char msg[64];
-        snprintf(msg, sizeof(msg), "删除 %s 吗?", string_get_cstr(app->current_file));
-        mui_msg_box_set_header(app->p_msg_box, "删除");
+        snprintf(msg, sizeof(msg), "Cancellare %s?", string_get_cstr(app->current_file));
+        mui_msg_box_set_header(app->p_msg_box, "elimina");
         mui_msg_box_set_message(app->p_msg_box, msg);
-        mui_msg_box_set_btn_text(app->p_msg_box, "取消", NULL, "删除");
+        mui_msg_box_set_btn_text(app->p_msg_box, "annulla", NULL, "elimina");
         mui_msg_box_set_btn_focus(app->p_msg_box, 2);
         mui_msg_box_set_event_cb(app->p_msg_box, amiibo_scene_file_browser_menu_msg_box_remove_folder_event_cb);
 
@@ -184,7 +183,7 @@ static void amiibo_scene_file_browser_menu_on_selected(mui_list_view_event_t eve
     } break;
 
     case FILE_BROWSER_MENU_RENAME_FOLDER: {
-        mui_text_input_set_header(app->p_text_input, "输入新名:");
+        mui_text_input_set_header(app->p_text_input, "Nuovo nome:");
         mui_text_input_set_input_text(app->p_text_input, string_get_cstr(app->current_file));
         mui_text_input_set_event_cb(app->p_text_input,
                                     amiibo_scene_file_browser_menu_text_input_rename_folder_event_cb);
@@ -207,14 +206,14 @@ void amiibo_scene_file_browser_menu_on_enter(void *user_data) {
 
     mui_list_view_add_item(app->p_list_view, 0xe1c7, string_get_cstr(app->current_file), FILE_BROWSER_MENU_FILE_NAME);
 
-    mui_list_view_add_item(app->p_list_view, 0xe1c8, "新建文件夹..", (void *)FILE_BROWSER_MENU_CREATE_FOLDER);
-    mui_list_view_add_item(app->p_list_view, 0xe1c8, "新建标签..", (void *)FILE_BROWSER_MENU_CREATE_AMIIBO);
+    mui_list_view_add_item(app->p_list_view, 0xe1c8, "Nuova cartella..", (void *)FILE_BROWSER_MENU_CREATE_FOLDER);
+    mui_list_view_add_item(app->p_list_view, 0xe1c8, "nuova etichetta..", (void *)FILE_BROWSER_MENU_CREATE_AMIIBO);
     if (string_cmp_str(app->current_file, "..") != 0) {
-        mui_list_view_add_item(app->p_list_view, 0xe1c9, "重命名..", (void *)FILE_BROWSER_MENU_RENAME_FOLDER);
-        mui_list_view_add_item(app->p_list_view, 0xe1ca, "删除..", (void *)FILE_BROWSER_MENU_REMOVE_FOLDER);
+        mui_list_view_add_item(app->p_list_view, 0xe1c9, "rinomina..", (void *)FILE_BROWSER_MENU_RENAME_FOLDER);
+        mui_list_view_add_item(app->p_list_view, 0xe1ca, "elimina..", (void *)FILE_BROWSER_MENU_REMOVE_FOLDER);
     }
-    mui_list_view_add_item(app->p_list_view, 0xe069, "返回文件列表", (void *)FILE_BROWSER_MENU_BACK_FILE_BROWSER);
-    mui_list_view_add_item(app->p_list_view, 0xe069, "返回主菜单", (void *)FILE_BROWSER_MENU_BACK_MAIN_MENU);
+    mui_list_view_add_item(app->p_list_view, 0xe069, "Elenco file", (void *)FILE_BROWSER_MENU_BACK_FILE_BROWSER);
+    mui_list_view_add_item(app->p_list_view, 0xe069, "Menu principale", (void *)FILE_BROWSER_MENU_BACK_MAIN_MENU);
 
     mui_list_view_set_selected_cb(app->p_list_view, amiibo_scene_file_browser_menu_on_selected);
     mui_list_view_set_user_data(app->p_list_view, app);

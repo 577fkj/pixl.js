@@ -39,9 +39,9 @@ static void amiibo_scene_storage_list_menu_on_selected(mui_list_view_event_t eve
 
     case STORAGE_LIST_MENU_FORMAT: {
 
-        mui_msg_box_set_header(app->p_msg_box, "格式化存储");
-        mui_msg_box_set_message(app->p_msg_box, "将删除所有数据。\n确认格式化?");
-        mui_msg_box_set_btn_text(app->p_msg_box, "确定", NULL, "取消");
+        mui_msg_box_set_header(app->p_msg_box, "formato");
+        mui_msg_box_set_message(app->p_msg_box, "Tutti i dati saranno cancellati.\nConferma la formattazione?");
+        mui_msg_box_set_btn_text(app->p_msg_box, "conferma", NULL, "annulla");
         mui_msg_box_set_btn_focus(app->p_msg_box, 0);
         mui_msg_box_set_event_cb(app->p_msg_box, amiibo_scene_storage_list_menu_msg_box_format_cb);
 
@@ -66,25 +66,25 @@ void amiibo_scene_storage_list_menu_on_enter(void *user_data) {
     int32_t res = p_driver->stat(&stat);
     char txt[64];
     if (res == VFS_OK) {
-        #ifdef VFS_LFS_ENABLE
-        #define mount_str "===已挂载[LFS]==="
-        #else
-        #define mount_str "===已挂载[FFS]==="
-        #endif
+#ifdef VFS_LFS_ENABLE
+#define mount_str "===Montato[LFS]==="
+#else
+#define mount_str "===Montato[FFS]==="
+#endif
         mui_list_view_add_item(app->p_list_view, 0xe1ca,
-                               stat.avaliable ? mount_str : "=====未挂载=====", (void *)-1);
+                               stat.avaliable ? mount_str : "=====non montato=====", (void *)-1);
         if (stat.avaliable) {
-            snprintf(txt, sizeof(txt), "总空间: %d kB", stat.total_bytes / 1024);
+            snprintf(txt, sizeof(txt), "Spazio totale: %d kB", stat.total_bytes / 1024);
             mui_list_view_add_item(app->p_list_view, 0xe1cb, txt, (void *)-1);
-            snprintf(txt, sizeof(txt), "可用空间: %d kB", stat.free_bytes / 1024);
+            snprintf(txt, sizeof(txt), "Spazio disponibile: %d kB", stat.free_bytes / 1024);
             mui_list_view_add_item(app->p_list_view, 0xe1cc, txt, (void *)-1);
         }
     }
 
-    mui_list_view_add_item(app->p_list_view, 0xe1cd, "格式化", (void *)STORAGE_LIST_MENU_FORMAT);
+    mui_list_view_add_item(app->p_list_view, 0xe1cd, "formato", (void *)STORAGE_LIST_MENU_FORMAT);
 
-    mui_list_view_add_item(app->p_list_view, 0xe069, "返回列表", (void *)STORAGE_LIST_MENU_BACK);
-    mui_list_view_add_item(app->p_list_view, ICON_HOME, "返回主菜单", (void *)STORAGE_LIST_MENU_BACK_MAIN_MENU);
+    mui_list_view_add_item(app->p_list_view, 0xe069, "Torna all'elenco", (void *)STORAGE_LIST_MENU_BACK);
+    mui_list_view_add_item(app->p_list_view, ICON_HOME, "Menu principale", (void *)STORAGE_LIST_MENU_BACK_MAIN_MENU);
 
     mui_list_view_set_selected_cb(app->p_list_view, amiibo_scene_storage_list_menu_on_selected);
     mui_list_view_set_user_data(app->p_list_view, app);

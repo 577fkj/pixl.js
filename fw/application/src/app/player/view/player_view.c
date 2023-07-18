@@ -29,7 +29,7 @@ static void player_view_on_draw(mui_view_t *p_view, mui_canvas_t *p_canvas) {
             }
         }
     } else {
-        mui_canvas_draw_utf8(p_canvas, 0, 10, "<未播放动画>");
+        mui_canvas_draw_utf8(p_canvas, 0, 10, "<Nessuna animazione riprodotta>");
     }
 }
 

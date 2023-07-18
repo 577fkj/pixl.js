@@ -45,28 +45,28 @@ static void settings_scene_main_list_view_on_selected(mui_list_view_event_t even
 
     case SETTINGS_MAIN_MENU_SKIP_DRIVER_SELECT:
         p_settings->skip_driver_select = !p_settings->skip_driver_select;
-        sprintf(txt, "自动选择存储 [%s]", p_settings->skip_driver_select ? "开" : "关");
+        sprintf(txt, "Selezione automatica [%s]", p_settings->skip_driver_select ? "aperto" : "chiudi");
         string_set_str(p_item->text, txt);
         mui_update(mui());
         break;
 
     case SETTINGS_MAIN_MENU_LI_MODE:
         p_settings->bat_mode = !p_settings->bat_mode;
-        sprintf(txt, "LiPO电池 [%s]", p_settings->bat_mode ? "开" : "关");
+        sprintf(txt, "batteria al litio [%s]", p_settings->bat_mode ? "aperto" : "chiudi");
         string_set_str(p_item->text, txt);
         mui_update(mui());
         break;
 
     case SETTINGS_MAIN_MENU_SHOW_MEM_USAGE:
         p_settings->show_mem_usage = !p_settings->show_mem_usage;
-        sprintf(txt, "内存使用率 [%s]", p_settings->show_mem_usage ? "开" : "关");
+        sprintf(txt, "Uso della memoria [%s]", p_settings->show_mem_usage ? "aperto" : "chiudi");
         string_set_str(p_item->text, txt);
         mui_update(mui());
         break;
 
     case SETTINGS_MAIN_MENU_ENABLE_HIBERNATE:
         p_settings->hibernate_enabled = !p_settings->hibernate_enabled;
-        sprintf(txt, "快速唤醒 [%s]", p_settings->hibernate_enabled ? "开" : "关");
+        sprintf(txt, "Sveglia rapida [%s]", p_settings->hibernate_enabled ? "aperto" : "chiudi");
         string_set_str(p_item->text, txt);
         mui_update(mui());
         break;
@@ -81,33 +81,33 @@ void settings_scene_main_on_enter(void *user_data) {
 
     app_settings_t *app = user_data;
     char txt[32];
-    sprintf(txt, "版本 [%s]", version_get_version(version_get()));
+    sprintf(txt, "versione [%s]", version_get_version(version_get()));
     mui_list_view_add_item(app->p_list_view, 0xe1c7, txt, (void *)SETTINGS_MAIN_MENU_VERSION);
 
     settings_data_t *p_settings = settings_get_data();
-    sprintf(txt, "自动选择存储 [%s]", p_settings->skip_driver_select ? "开" : "关");
+    sprintf(txt, "Selezione automatica [%s]", p_settings->skip_driver_select ? "aperto" : "chiudi");
     mui_list_view_add_item(app->p_list_view, 0xe146, txt, (void *)SETTINGS_MAIN_MENU_SKIP_DRIVER_SELECT);
 
     if (p_settings->lcd_backlight == 0) {
-        sprintf(txt, "背光亮度 [关]");
+        sprintf(txt, "luminosità [chiudi]");
     } else {
-        sprintf(txt, "背光亮度 [%d%%]", p_settings->lcd_backlight);
+        sprintf(txt, "luminosità [%d%%]", p_settings->lcd_backlight);
     }
     mui_list_view_add_item(app->p_list_view, 0xe1c8, txt, (void *)SETTINGS_MAIN_MENU_BACK_LIGHT);
 
-    sprintf(txt, "LiPO电池 [%s]", p_settings->bat_mode ? "开" : "关");
+    sprintf(txt, "batteria al litio [%s]", p_settings->bat_mode ? "aperto" : "chiudi");
     mui_list_view_add_item(app->p_list_view, 0xe08f, txt, (void *)SETTINGS_MAIN_MENU_LI_MODE);
 
-    sprintf(txt, "内存使用率 [%s]", p_settings->show_mem_usage ? "开" : "关");
+    sprintf(txt, "Uso della memoria [%s]", p_settings->show_mem_usage ? "aperto" : "chiudi");
     mui_list_view_add_item(app->p_list_view, 0xe1f3, txt, (void *)SETTINGS_MAIN_MENU_SHOW_MEM_USAGE);
 
-    sprintf(txt, "快速唤醒 [%s]", p_settings->hibernate_enabled ? "开" : "关");
+    sprintf(txt, "Sveglia rapida [%s]", p_settings->hibernate_enabled ? "aperto" : "chiudi");
     mui_list_view_add_item(app->p_list_view, 0xe232, txt, (void *)SETTINGS_MAIN_MENU_ENABLE_HIBERNATE);
 
-    sprintf(txt, "休眠时间 [%ds]", nrf_pwr_mgmt_get_timeout());
+    sprintf(txt, "Tempo di sonno [%ds]", nrf_pwr_mgmt_get_timeout());
     mui_list_view_add_item(app->p_list_view, 0xe1c9, txt, (void *)SETTINGS_MAIN_MENU_SLEEP_TIMEOUT);
-    mui_list_view_add_item(app->p_list_view, 0xe1ca, "固件更新", (void *)SETTINGS_MAIN_MENU_DFU);
-    mui_list_view_add_item(app->p_list_view, 0xe069, "返回主菜单", (void *)SETTINGS_MAIN_MENU_EXIT);
+    mui_list_view_add_item(app->p_list_view, 0xe1ca, "aggiornamento", (void *)SETTINGS_MAIN_MENU_DFU);
+    mui_list_view_add_item(app->p_list_view, 0xe069, "Menu principale", (void *)SETTINGS_MAIN_MENU_EXIT);
 
     mui_list_view_set_selected_cb(app->p_list_view, settings_scene_main_list_view_on_selected);
 
