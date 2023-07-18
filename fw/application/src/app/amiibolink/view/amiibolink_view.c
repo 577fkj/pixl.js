@@ -28,7 +28,7 @@ static void amiibolink_view_on_draw(mui_view_t *p_view, mui_canvas_t *p_canvas) 
 
     // draw mode icon
     if (p_amiibolink_view->amiibolink_mode == BLE_AMIIBOLINK_MODE_RANDOM ||
-        p_amiibolink_view->amiibolink_mode ==BLE_AMIIBOLINK_MODE_RANDOM_AUTO_GEN) {
+        p_amiibolink_view->amiibolink_mode == BLE_AMIIBOLINK_MODE_RANDOM_AUTO_GEN) {
         mui_canvas_set_font(p_canvas, u8g2_font_siji_t_6x10);
         mui_canvas_draw_glyph(p_canvas, 10, y + 10, ICON_RANDOM);
     } else if (p_amiibolink_view->amiibolink_mode == BLE_AMIIBOLINK_MODE_CYCLE) {
@@ -87,7 +87,7 @@ static void amiibolink_view_on_draw(mui_view_t *p_view, mui_canvas_t *p_canvas) 
             sprintf(buff, "[%08x:%08x]", head, tail);
             mui_canvas_draw_utf8(p_canvas, 5, y += 15, buff);
         } else {
-            mui_canvas_draw_utf8(p_canvas, 5, y += 15, "空标签");
+            mui_canvas_draw_utf8(p_canvas, 5, y += 15, "Etiquetas vacías");
         }
     }
 }
@@ -103,7 +103,7 @@ static void amiibolink_view_on_input(mui_view_t *p_view, mui_input_event_t *even
     }
     case INPUT_TYPE_SHORT: {
 
-        if(event->key == INPUT_KEY_CENTER){
+        if (event->key == INPUT_KEY_CENTER) {
             if (p_amiibolink_view->event_cb) {
                 p_amiibolink_view->event_cb(AMIIBOLINK_VIEW_EVENT_MENU, p_amiibolink_view);
             }

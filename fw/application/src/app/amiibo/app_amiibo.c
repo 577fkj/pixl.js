@@ -107,7 +107,8 @@ void app_amiibo_on_kill(mini_app_inst_t *p_app_inst) {
     app_amiibo_t *p_app_handle = p_app_inst->p_handle;
 
     uint32_t current_scene_id = mui_scene_dispatcher_current_scene(p_app_handle->p_scene_dispatcher);
-    if (app_amiibo_info.hibernate_enabled && (current_scene_id == AMIIBO_SCENE_AMIIBO_DETAIL || current_scene_id == AMIIBO_SCENE_FILE_BROWSER)) {
+    if (app_amiibo_info.hibernate_enabled &&
+        (current_scene_id == AMIIBO_SCENE_AMIIBO_DETAIL || current_scene_id == AMIIBO_SCENE_FILE_BROWSER)) {
         app_amiibo_cache_data_t p_cache_data = {0};
         p_cache_data.cached_enabled = true;
         strcpy(p_cache_data.current_file, string_get_cstr(p_app_handle->current_file));
@@ -142,7 +143,7 @@ void app_amiibo_on_kill(mini_app_inst_t *p_app_inst) {
 void app_amiibo_on_event(mini_app_inst_t *p_app_inst, mini_app_event_t *p_event) {}
 
 const mini_app_t app_amiibo_info = {.id = MINI_APP_ID_AMIIBO,
-                                    .name = "Amiibo模拟器",
+                                    .name = "Simulador de amiibo",
                                     .icon = 0xe082,
                                     .sys = false,
                                     .deamon = false,

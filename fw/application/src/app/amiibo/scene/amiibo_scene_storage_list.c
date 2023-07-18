@@ -38,8 +38,8 @@ static void amiibo_scene_storage_list_on_selected(mui_list_view_event_t event, m
             mini_app_launcher_kill(mini_app_launcher(), MINI_APP_ID_AMIIBO);
         }
 
-    } else if(event == MUI_LIST_VIEW_EVENT_LONG_SELECTED){
-        if(p_item->icon == ICON_DRIVE) {
+    } else if (event == MUI_LIST_VIEW_EVENT_LONG_SELECTED) {
+        if (p_item->icon == ICON_DRIVE) {
             mui_scene_dispatcher_next_scene(p_app->p_scene_dispatcher, AMIIBO_SCENE_STORAGE_LIST_MENU);
         }
     }
@@ -48,7 +48,7 @@ static void amiibo_scene_storage_list_on_selected(mui_list_view_event_t event, m
 void amiibo_scene_storage_list_on_enter(void *user_data) {
     app_amiibo_t *app = user_data;
 
-    mui_list_view_add_item(app->p_list_view, ICON_HOME, ">>主菜单<<", (void *)-1);
+    mui_list_view_add_item(app->p_list_view, ICON_HOME, ">>Menú principal<<", (void *)-1);
 
     if (vfs_drive_enabled(VFS_DRIVE_INT)) {
         mui_list_view_add_item(app->p_list_view, ICON_DRIVE, "[Internal Flash]", (void *)VFS_DRIVE_INT);

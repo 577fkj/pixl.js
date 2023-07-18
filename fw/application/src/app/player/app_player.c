@@ -24,11 +24,10 @@ void app_player_on_run(mini_app_inst_t *p_app_inst) {
     mui_list_view_set_user_data(p_app_handle->p_list_view, p_app_handle);
     player_view_set_user_data(p_app_handle->p_player_view, p_app_handle);
 
-
     mui_view_dispatcher_add_view(p_app_handle->p_view_dispatcher, PLAYER_VIEW_ID_PLAYER,
                                  player_view_get_view(p_app_handle->p_player_view));
 
-                                     mui_view_dispatcher_add_view(p_app_handle->p_view_dispatcher, PLAYER_VIEW_ID_LIST,
+    mui_view_dispatcher_add_view(p_app_handle->p_view_dispatcher, PLAYER_VIEW_ID_LIST,
                                  mui_list_view_get_view(p_app_handle->p_list_view));
 
     mui_view_dispatcher_attach(p_app_handle->p_view_dispatcher, MUI_LAYER_FULLSCREEN);
@@ -56,11 +55,11 @@ void app_player_on_kill(mini_app_inst_t *p_app_inst) {
 void app_player_on_event(mini_app_inst_t *p_app_inst, mini_app_event_t *p_event) {}
 
 const mini_app_t app_player_info = {.id = MINI_APP_ID_PLAYER,
-                                 .name = "动画播放器",
-                                 .icon = 0xe020,
-                                 .deamon = false,
-                                 .sys = false,
-                                 .hibernate_enabled = false,
-                                 .run_cb = app_player_on_run,
-                                 .kill_cb = app_player_on_kill,
-                                 .on_event_cb = app_player_on_event};
+                                    .name = "Reproductor de animación",
+                                    .icon = 0xe020,
+                                    .deamon = false,
+                                    .sys = false,
+                                    .hibernate_enabled = false,
+                                    .run_cb = app_player_on_run,
+                                    .kill_cb = app_player_on_kill,
+                                    .on_event_cb = app_player_on_event};

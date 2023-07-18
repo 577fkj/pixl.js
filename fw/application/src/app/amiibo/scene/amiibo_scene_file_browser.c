@@ -1,12 +1,12 @@
 #include "amiibo_scene.h"
 #include "app_amiibo.h"
 #include "cwalk.h"
+#include "mini_app_launcher.h"
+#include "mini_app_registry.h"
 #include "mui_list_view.h"
 #include "nrf_log.h"
 #include "vfs.h"
 #include "vfs_meta.h"
-#include "mini_app_registry.h"
-#include "mini_app_launcher.h"
 
 #include "settings.h"
 
@@ -18,17 +18,16 @@
 
 #define FOLDER_LIST_PARENT 0xFFFF
 
-
-static int amiibo_scene_file_browser_list_item_cmp(const mui_list_item_t* p_item_a, const mui_list_item_t* p_item_b){
+static int amiibo_scene_file_browser_list_item_cmp(const mui_list_item_t *p_item_a, const mui_list_item_t *p_item_b) {
     if (p_item_a->icon == ICON_HOME) {
         return -1;
     }
     if (p_item_b->icon == ICON_HOME) {
         return 1;
     }
-    if(p_item_a->icon != p_item_b->icon){
+    if (p_item_a->icon != p_item_b->icon) {
         return p_item_a->icon - p_item_b->icon;
-    }else{
+    } else {
         return string_cmp(p_item_a->text, p_item_b->text);
     }
 }
@@ -40,9 +39,12 @@ static void amiibo_scene_file_browser_reload_folders(app_amiibo_t *app) {
 
     mui_list_view_clear_items(app->p_list_view);
     if (string_cmp_str(app->current_folder, "/") == 0) {
-        bool one_driver = (vfs_drive_enabled(VFS_DRIVE_INT) && !vfs_drive_enabled(VFS_DRIVE_EXT)) || (!vfs_drive_enabled(VFS_DRIVE_INT) && vfs_drive_enabled(VFS_DRIVE_EXT));
-        settings_data_t* p_settings = settings_get_data();
-        mui_list_view_add_item(app->p_list_view, (one_driver && p_settings->skip_driver_select) ? ICON_HOME : ICON_BACK, (one_driver && p_settings->skip_driver_select) ? ">>主菜单<<" : "..", (void *)(one_driver && p_settings->skip_driver_select) ? -1 : FOLDER_LIST_PARENT);
+        bool one_driver = (vfs_drive_enabled(VFS_DRIVE_INT) && !vfs_drive_enabled(VFS_DRIVE_EXT)) ||
+                          (!vfs_drive_enabled(VFS_DRIVE_INT) && vfs_drive_enabled(VFS_DRIVE_EXT));
+        settings_data_t *p_settings = settings_get_data();
+        mui_list_view_add_item(app->p_list_view, (one_driver && p_settings->skip_driver_select) ? ICON_HOME : ICON_BACK,
+                               (one_driver && p_settings->skip_driver_select) ? ">>Menú principal<<" : "..",
+                               (void *)(one_driver && p_settings->skip_driver_select) ? -1 : FOLDER_LIST_PARENT);
     } else {
         mui_list_view_add_item(app->p_list_view, ICON_BACK, "..", (void *)FOLDER_LIST_PARENT);
     }
@@ -52,11 +54,11 @@ static void amiibo_scene_file_browser_reload_folders(app_amiibo_t *app) {
     int32_t res = p_vfs_driver->open_dir(string_get_cstr(app->current_folder), &dir);
     if (res == VFS_OK) {
         while ((res = p_vfs_driver->read_dir(&dir, &obj)) == VFS_OK) {
-            //hide file or dir if flagged with hidden
+            // hide file or dir if flagged with hidden
             vfs_meta_t meta;
             memset(&meta, 0, sizeof(vfs_meta_t));
             vfs_meta_decode(obj.meta, sizeof(obj.meta), &meta);
-            if(meta.has_flags && (meta.flags && VFS_OBJ_FLAG_HIDDEN)){
+            if (meta.has_flags && (meta.flags && VFS_OBJ_FLAG_HIDDEN)) {
                 continue;
             }
             uint16_t icon = obj.type == VFS_TYPE_DIR ? ICON_FOLDER : ICON_FILE;
@@ -64,12 +66,10 @@ static void amiibo_scene_file_browser_reload_folders(app_amiibo_t *app) {
         }
         p_vfs_driver->close_dir(&dir);
     } else {
-        mui_list_view_add_item(app->p_list_view, ICON_ERROR, "打开文件夹失败", (void *)-1);
+        mui_list_view_add_item(app->p_list_view, ICON_ERROR, "Falló la apertura de la carpeta", (void *)-1);
     }
 
     mui_list_view_sort(app->p_list_view, amiibo_scene_file_browser_list_item_cmp);
-
-
 }
 
 static void amiibo_scene_file_browser_on_selected(mui_list_view_event_t event, mui_list_view_t *p_list_view,
@@ -124,7 +124,6 @@ void amiibo_scene_file_browser_on_enter(void *user_data) {
     NRF_LOG_INFO("%X", app);
     mui_list_view_set_selected_cb(app->p_list_view, amiibo_scene_file_browser_on_selected);
     mui_list_view_set_user_data(app->p_list_view, app);
-
 
     amiibo_scene_file_browser_reload_folders(app);
 

@@ -1,4 +1,5 @@
 #include "amiibo_data.h"
+#include "amiibo_helper.h"
 #include "amiibo_scene.h"
 #include "app_amiibo.h"
 #include "app_timer.h"
@@ -6,11 +7,10 @@
 #include "mui_list_view.h"
 #include "nrf_log.h"
 #include "ntag_emu.h"
-#include "vfs.h"
-#include "vfs_meta.h"
-#include "amiibo_helper.h"
 #include "ntag_store.h"
 #include "settings.h"
+#include "vfs.h"
+#include "vfs_meta.h"
 
 #define NRF_ERR_NOT_AMIIBO -1000
 #define NRF_ERR_READ_ERROR -1001
@@ -30,16 +30,16 @@ static void amiibo_scene_amiibo_detail_reload_error(app_amiibo_t *app, const cha
     strcpy(msg, path);
     strcat(msg, "\n");
     if (err_code == NRF_ERR_NOT_AMIIBO) {
-        strcat(msg, "这不是Amiibo文件");
+        strcat(msg, "Este no es el documento amiibo.");
     } else if (err_code == NRF_ERR_READ_ERROR) {
-        strcat(msg, "读取文件失败");
+        strcat(msg, "Falló la lectura del archivo");
     } else {
-        strcat(msg, "读取文件失败");
+        strcat(msg, "Falló la lectura del archivo");
     }
 
-    mui_msg_box_set_header(app->p_msg_box, "错误");
+    mui_msg_box_set_header(app->p_msg_box, "Error");
     mui_msg_box_set_message(app->p_msg_box, msg);
-    mui_msg_box_set_btn_text(app->p_msg_box, NULL, "返回", NULL);
+    mui_msg_box_set_btn_text(app->p_msg_box, NULL, "Volver", NULL);
     mui_msg_box_set_btn_focus(app->p_msg_box, 1);
     mui_msg_box_set_event_cb(app->p_msg_box, amiibo_scene_amiibo_detail_msg_box_error_cb);
 
@@ -69,7 +69,7 @@ static int32_t ntag_read(vfs_driver_t *p_vfs_driver, const char *path, ntag_t *n
     vfs_meta_t meta;
     memset(&meta, 0, sizeof(vfs_meta_t));
     vfs_meta_decode(obj.meta, sizeof(obj.meta), &meta);
-    if(meta.has_notes){
+    if (meta.has_notes) {
         memcpy(ntag->notes, meta.notes, strlen(meta.notes));
     }
 
@@ -134,7 +134,7 @@ static void ntag_update_cb(ntag_event_type_t type, void *context, ntag_t *p_ntag
     if (type == NTAG_EVENT_TYPE_WRITTEN) {
         ntag_update(app, p_ntag);
     } else if (type == NTAG_EVENT_TYPE_READ) {
-        settings_data_t* p_settings = settings_get_data();
+        settings_data_t *p_settings = settings_get_data();
         if (p_settings->auto_gen_amiibo) {
             app_timer_stop(m_amiibo_gen_delay_timer);
             app_timer_start(m_amiibo_gen_delay_timer, APP_TIMER_TICKS(1000), app);
