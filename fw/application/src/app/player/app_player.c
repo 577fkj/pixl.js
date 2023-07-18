@@ -56,7 +56,7 @@ void app_player_on_kill(mini_app_inst_t *p_app_inst) {
 void app_player_on_event(mini_app_inst_t *p_app_inst, mini_app_event_t *p_event) {}
 
 const mini_app_t app_player_info = {.id = MINI_APP_ID_PLAYER,
-                                 .name = "Video player",
+                                 .name = "动画播放器",
                                  .icon = 0xe020,
                                  .deamon = false,
                                  .sys = false,

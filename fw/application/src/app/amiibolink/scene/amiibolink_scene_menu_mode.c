@@ -26,12 +26,12 @@ void amiibolink_scene_menu_mode_on_event(mui_list_view_event_t event, mui_list_v
 void amiibolink_scene_menu_mode_on_enter(void *user_data) {
     app_amiibolink_t *app = user_data;
 
-    mui_list_view_add_item(app->p_list_view, ICON_BACK, ">>Back<<", (void *)-1);
+    mui_list_view_add_item(app->p_list_view, ICON_BACK, ">>返回<<", (void *)-1);
 
-    mui_list_view_add_item(app->p_list_view, ICON_MODE, "Random(Manual)", (void *)BLE_AMIIBOLINK_MODE_RANDOM);
-    mui_list_view_add_item(app->p_list_view, ICON_MODE, "Random(Auto)", (void *)BLE_AMIIBOLINK_MODE_RANDOM_AUTO_GEN);
-    mui_list_view_add_item(app->p_list_view, ICON_MODE, "Sequential mode", (void *)BLE_AMIIBOLINK_MODE_CYCLE);
-    mui_list_view_add_item(app->p_list_view, ICON_MODE, "Read-write mode", (void *)BLE_AMIIBOLINK_MODE_NTAG);
+    mui_list_view_add_item(app->p_list_view, ICON_MODE, "随机模式(手动)", (void *)BLE_AMIIBOLINK_MODE_RANDOM);
+    mui_list_view_add_item(app->p_list_view, ICON_MODE, "随机模式(自动)", (void *)BLE_AMIIBOLINK_MODE_RANDOM_AUTO_GEN);
+    mui_list_view_add_item(app->p_list_view, ICON_MODE, "按序模式", (void *)BLE_AMIIBOLINK_MODE_CYCLE);
+    mui_list_view_add_item(app->p_list_view, ICON_MODE, "读写模式", (void *)BLE_AMIIBOLINK_MODE_NTAG);
     mui_list_view_set_focus(app->p_list_view, app->amiibolink_mode);
     mui_list_view_set_selected_cb(app->p_list_view, amiibolink_scene_menu_mode_on_event);
     mui_view_dispatcher_switch_to_view(app->p_view_dispatcher, AMIIBOLINK_VIEW_ID_LIST);

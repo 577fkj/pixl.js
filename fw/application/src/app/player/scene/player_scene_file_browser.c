@@ -52,7 +52,7 @@ static void player_scene_file_browser_reload_folders(app_player_t *app) {
 
     p_vfs_driver = vfs_get_driver(VFS_DRIVE_EXT);
 
-    mui_list_view_add_item(app->p_list_view, ICON_HOME, ">>Main menu<<", (void *)-1);
+    mui_list_view_add_item(app->p_list_view, ICON_HOME, ">>主菜单<<", (void *)-1);
 
     int32_t res = p_vfs_driver->open_dir("/player", &dir);
     uint32_t file_cnt = 0;
@@ -70,11 +70,11 @@ static void player_scene_file_browser_reload_folders(app_player_t *app) {
         }
         p_vfs_driver->close_dir(&dir);
     } else {
-        mui_list_view_add_item(app->p_list_view, ICON_ERROR, "Failed to open folder", (void *)-1);
+        mui_list_view_add_item(app->p_list_view, ICON_ERROR, "打开文件夹失败", (void *)-1);
     }
 
     if (file_cnt == 0) {
-        mui_list_view_add_item(app->p_list_view, ICON_ERROR, "<No voide files>", (void *)-1);
+        mui_list_view_add_item(app->p_list_view, ICON_ERROR, "<无动画文件>", (void *)-1);
     }
 
     //mui_list_view_sort(app->p_list_view, player_scene_file_browser_list_item_cmp);

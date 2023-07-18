@@ -26,6 +26,7 @@ static void settings_scene_sleep_timeout_list_view_on_selected(mui_list_view_eve
         nrf_pwr_mgmt_set_timeout(15);
         p_settings->sleep_timeout_sec = 15;
         break;
+
     case SETTINGS_SLEEP_TIMEOUT_MENU_30S:
         nrf_pwr_mgmt_set_timeout(30);
         p_settings->sleep_timeout_sec = 30;
@@ -57,13 +58,13 @@ static void settings_scene_sleep_timeout_list_view_on_selected(mui_list_view_eve
 void settings_scene_sleep_timeout_on_enter(void *user_data) {
 
     app_settings_t *app = user_data;
-    mui_list_view_add_item(app->p_list_view, 0xe105, "15 S", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_15S);
-    mui_list_view_add_item(app->p_list_view, 0xe105, "30 S", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_30S);
-    mui_list_view_add_item(app->p_list_view, 0xe105, "45 S", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_45S);
-    mui_list_view_add_item(app->p_list_view, 0xe105, "1 min", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_1MIN);
-    mui_list_view_add_item(app->p_list_view, 0xe105, "2 min", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_2MIN);
-    mui_list_view_add_item(app->p_list_view, 0xe105, "3 min", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_3MIN);
-    mui_list_view_add_item(app->p_list_view, 0xe069, "Back", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_EXIT);
+    mui_list_view_add_item(app->p_list_view, 0xe105, "15秒", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_15S);
+    mui_list_view_add_item(app->p_list_view, 0xe105, "30秒", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_30S);
+    mui_list_view_add_item(app->p_list_view, 0xe105, "45秒", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_45S);
+    mui_list_view_add_item(app->p_list_view, 0xe105, "1分钟", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_1MIN);
+    mui_list_view_add_item(app->p_list_view, 0xe105, "2分钟", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_2MIN);
+    mui_list_view_add_item(app->p_list_view, 0xe105, "3分钟", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_3MIN);
+    mui_list_view_add_item(app->p_list_view, 0xe069, "返回", (void *)SETTINGS_SLEEP_TIMEOUT_MENU_EXIT);
 
     mui_list_view_set_selected_cb(app->p_list_view, settings_scene_sleep_timeout_list_view_on_selected);
     mui_view_dispatcher_switch_to_view(app->p_view_dispatcher, SETTINGS_VIEW_ID_MAIN);
