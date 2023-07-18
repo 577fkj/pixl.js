@@ -84,25 +84,24 @@ void settings_scene_main_on_enter(void *user_data) {
     sprintf(txt, "Version [%s]", version_get_version(version_get()));
     mui_list_view_add_item(app->p_list_view, 0xe1c7, txt, (void *)SETTINGS_MAIN_MENU_VERSION);
 
-
     settings_data_t *p_settings = settings_get_data();
-    sprintf(txt, "Auto select [%s]", p_settings->skip_driver_select ? "开" : "关");
+    sprintf(txt, "Auto select [%s]", p_settings->skip_driver_select ? "On" : "Off");
     mui_list_view_add_item(app->p_list_view, 0xe146, txt, (void *)SETTINGS_MAIN_MENU_SKIP_DRIVER_SELECT);
 
     if (p_settings->lcd_backlight == 0) {
-        sprintf(txt, "Backlight [关]");
+        sprintf(txt, "Backlight [Off]");
     } else {
         sprintf(txt, "Backlight [%d%%]", p_settings->lcd_backlight);
     }
     mui_list_view_add_item(app->p_list_view, 0xe1c8, txt, (void *)SETTINGS_MAIN_MENU_BACK_LIGHT);
 
-    sprintf(txt, "Lithium battery [%s]", p_settings->bat_mode ? "开" : "关");
+    sprintf(txt, "Lithium battery [%s]", p_settings->bat_mode ? "On" : "Off");
     mui_list_view_add_item(app->p_list_view, 0xe08f, txt, (void *)SETTINGS_MAIN_MENU_LI_MODE);
 
-    sprintf(txt, "Memory usage [%s]", p_settings->show_mem_usage ? "开" : "关");
+    sprintf(txt, "Memory usage [%s]", p_settings->show_mem_usage ? "On" : "Off");
     mui_list_view_add_item(app->p_list_view, 0xe1f3, txt, (void *)SETTINGS_MAIN_MENU_SHOW_MEM_USAGE);
 
-    sprintf(txt, "Quick Wake-Up [%s]", p_settings->hibernate_enabled ? "开" : "关");
+    sprintf(txt, "Quick Wake-Up [%s]", p_settings->hibernate_enabled ? "On" : "Off");
     mui_list_view_add_item(app->p_list_view, 0xe232, txt, (void *)SETTINGS_MAIN_MENU_ENABLE_HIBERNATE);
 
     sprintf(txt, "Sleep time [%ds]", nrf_pwr_mgmt_get_timeout());

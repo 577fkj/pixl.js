@@ -4,8 +4,8 @@
 #include "mui_list_view.h"
 #include "nrf_log.h"
 #include "ntag_def.h"
-#include "vfs.h"
 #include "ntag_store.h"
+#include "vfs.h"
 
 #include "mini_app_launcher.h"
 #include "mini_app_registry.h"
@@ -93,25 +93,24 @@ static void amiibo_scene_file_browser_menu_text_input_rename_folder_event_cb(mui
             if (res == VFS_OK) {
                 renamed = true;
             }
-        }else{
-            //ignore error
+        } else {
+            // ignore error
             renamed = true;
         }
 
         if (renamed) {
             mui_scene_dispatcher_next_scene(app->p_scene_dispatcher, AMIIBO_SCENE_FILE_BROWSER);
-        }else{
+        } else {
             char msg[32];
-            sprintf(msg, "重命名失败\n错误码:%d", res);
-            mui_msg_box_set_header(app->p_msg_box, "错误");
+            sprintf(msg, "Rename faild!\nerror code:%d", res);
+            mui_msg_box_set_header(app->p_msg_box, "Error");
             mui_msg_box_set_message(app->p_msg_box, msg);
-            mui_msg_box_set_btn_text(app->p_msg_box, NULL, "返回", NULL);
+            mui_msg_box_set_btn_text(app->p_msg_box, NULL, "Back", NULL);
             mui_msg_box_set_btn_focus(app->p_msg_box, 1);
             mui_msg_box_set_event_cb(app->p_msg_box, amiibo_scene_scene_file_browser_menu_msg_box_error_cb);
 
             mui_view_dispatcher_switch_to_view(app->p_view_dispatcher, AMIIBO_VIEW_ID_MSG_BOX);
         }
-
     }
 }
 
@@ -213,7 +212,8 @@ void amiibo_scene_file_browser_menu_on_enter(void *user_data) {
         mui_list_view_add_item(app->p_list_view, 0xe1c9, "Rename..", (void *)FILE_BROWSER_MENU_RENAME_FOLDER);
         mui_list_view_add_item(app->p_list_view, 0xe1ca, "Delete..", (void *)FILE_BROWSER_MENU_REMOVE_FOLDER);
     }
-    mui_list_view_add_item(app->p_list_view, 0xe069, "Return to file list", (void *)FILE_BROWSER_MENU_BACK_FILE_BROWSER);
+    mui_list_view_add_item(app->p_list_view, 0xe069, "Return to file list",
+                           (void *)FILE_BROWSER_MENU_BACK_FILE_BROWSER);
     mui_list_view_add_item(app->p_list_view, 0xe069, "Return to main menu", (void *)FILE_BROWSER_MENU_BACK_MAIN_MENU);
 
     mui_list_view_set_selected_cb(app->p_list_view, amiibo_scene_file_browser_menu_on_selected);
