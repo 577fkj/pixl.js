@@ -1,6 +1,8 @@
 #include "amiibo_detail_view.h"
-#include "amiibo_data.h"
 #include "mui_element.h"
+#include "i18n/language.h"
+#include "db_header.h"
+#include "amiibo_helper.h"
 
 #define ICON_LEFT 0xe1ac
 #define ICON_RIGHT 0xe1aa
@@ -39,20 +41,19 @@ static void amiibo_detail_view_on_draw(mui_view_t *p_view, mui_canvas_t *p_canva
     uint32_t head = to_little_endian_int32(&ntag->data[84]);
     uint32_t tail = to_little_endian_int32(&ntag->data[88]);
 
-    const amiibo_data_t *amd = find_amiibo_data(head, tail);
+    const db_amiibo_t *amd = get_amiibo_by_id(head, tail);
     if (amd != NULL) {
-        mui_canvas_draw_utf8(p_canvas, 0, y += 13, amd->name);
+        const char *name = getLanguage() == LANGUAGE_EN_US ? amd->name_en : amd->name_cn;
+        mui_element_autowrap_text(p_canvas, 0, y += 15, mui_canvas_get_width(p_canvas), 24, name);
         if (strlen(ntag->notes) > 0) {
             mui_element_autowrap_text(p_canvas, 0, y += 13, mui_canvas_get_width(p_canvas), 24, ntag->notes);
-        } else {
-            mui_element_autowrap_text(p_canvas, 0, y += 13, mui_canvas_get_width(p_canvas), 24, amd->notes);
         }
     } else if (head > 0 && tail > 0) {
         mui_canvas_draw_utf8(p_canvas, 0, y += 15, "Amiibo");
         sprintf(buff, "[%08x:%08x]", head, tail);
         mui_canvas_draw_utf8(p_canvas, 0, y += 15, buff);
     } else {
-        mui_canvas_draw_utf8(p_canvas, 0, y += 13, "空标签");
+        mui_canvas_draw_utf8(p_canvas, 0, y += 13, getLangString(_L_BLANK_TAG));
     }
 }
 

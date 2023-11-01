@@ -1,4 +1,3 @@
-#include "amiibo_data.h"
 #include "amiibo_scene.h"
 #include "app_amiibo.h"
 #include "app_timer.h"
@@ -11,6 +10,8 @@
 #include "amiibo_helper.h"
 #include "ntag_store.h"
 #include "settings.h"
+#include "i18n/language.h"
+#include "db_header.h"
 
 #define NRF_ERR_NOT_AMIIBO -1000
 #define NRF_ERR_READ_ERROR -1001
@@ -30,16 +31,16 @@ static void amiibo_scene_amiibo_detail_reload_error(app_amiibo_t *app, const cha
     strcpy(msg, path);
     strcat(msg, "\n");
     if (err_code == NRF_ERR_NOT_AMIIBO) {
-        strcat(msg, "这不是Amiibo文件");
+        strcat(msg, getLangString(_L_NOT_AMIIBO_FILE));
     } else if (err_code == NRF_ERR_READ_ERROR) {
-        strcat(msg, "读取文件失败");
+        strcat(msg, getLangString(_L_READ_FILE_FAILED));
     } else {
-        strcat(msg, "读取文件失败");
+        strcat(msg, getLangString(_L_READ_FILE_FAILED));
     }
 
-    mui_msg_box_set_header(app->p_msg_box, "错误");
+    mui_msg_box_set_header(app->p_msg_box, getLangString(_L_ERR));
     mui_msg_box_set_message(app->p_msg_box, msg);
-    mui_msg_box_set_btn_text(app->p_msg_box, NULL, "返回", NULL);
+    mui_msg_box_set_btn_text(app->p_msg_box, NULL, getLangString(_L_BACK), NULL);
     mui_msg_box_set_btn_focus(app->p_msg_box, 1);
     mui_msg_box_set_event_cb(app->p_msg_box, amiibo_scene_amiibo_detail_msg_box_error_cb);
 
@@ -80,11 +81,12 @@ static int32_t ntag_read(vfs_driver_t *p_vfs_driver, const char *path, ntag_t *n
     return NRF_SUCCESS;
 }
 
-static void ntag_gen(app_amiibo_t *app) {
+static void ntag_gen(void *p_context) {
     ret_code_t err_code;
+    app_amiibo_t * app = p_context;
     ntag_t *ntag_current = &app->ntag;
 
-    err_code = amiibo_helper_ntag_generate(ntag_current);
+    err_code = amiibo_helper_rand_amiibo_uuid(ntag_current);
     if (err_code == NRF_SUCCESS) {
         ntag_emu_set_tag(&app->ntag);
         mui_update(mui());
@@ -106,12 +108,12 @@ static void ntag_update(app_amiibo_t *app, ntag_t *p_ntag) {
         uint32_t head = to_little_endian_int32(&p_ntag->data[84]);
         uint32_t tail = to_little_endian_int32(&p_ntag->data[88]);
 
-        const amiibo_data_t *amd = find_amiibo_data(head, tail);
+        const db_amiibo_t *amd = get_amiibo_by_id(head, tail);
 
         if (amd && strcmp(string_get_cstr(app->current_file), "new.bin") == 0) {
             char new_path[VFS_MAX_PATH_LEN];
             char new_name[VFS_MAX_NAME_LEN];
-            snprintf(new_name, sizeof(new_name), "%s.bin", amd->name);
+            snprintf(new_name, sizeof(new_name), "%s.bin", amd->name_en);
             cwalk_append_segment(new_path, string_get_cstr(app->current_folder), new_name);
             res = p_driver->rename_file(path, new_path);
 

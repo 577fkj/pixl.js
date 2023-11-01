@@ -9,7 +9,7 @@ U8G2_ROOT := ../components/u8g2/csrc
 
 APP_VERSION ?= 1
 RELEASE ?= 0
-LFS_ENABLE ?= 0
+BOARD ?= OLED
 
 $(OUTPUT_DIRECTORY)/pixljs.out: \
   LINKER_SCRIPT  := ../ld/application.ld
@@ -166,15 +166,14 @@ SRC_FILES += \
 	$(SDK_ROOT)/external/mbedtls/library/x509write_csr.c \
 	$(SDK_ROOT)/external/mbedtls/library/xtea.c \
   $(PROJ_DIR)/main.c \
-  $(PROJ_DIR)/ntag_emu_v2.c \
-  $(PROJ_DIR)/ntag_store.c \
+  $(PROJ_DIR)/ntag/ntag_emu_v2.c \
+  $(PROJ_DIR)/ntag/ntag_store.c \
   $(PROJ_DIR)/bat.c \
   $(PROJ_DIR)/utils.c \
   $(PROJ_DIR)/version2.c \
-  $(PROJ_DIR)/amiibo_data.c \
-  $(PROJ_DIR)/amiibo_data_lookup.c \
   $(PROJ_DIR)/amiibo_helper.c \
   $(PROJ_DIR)/app_error_handler.c \
+  $(PROJ_DIR)/libc_nano_stubs.c \
   $(PROJ_DIR)/hal/hal_spi_bus.c \
   $(PROJ_DIR)/hal/hal_spi_flash.c \
   $(PROJ_DIR)/hal/hal_internal_flash.c \
@@ -198,16 +197,22 @@ SRC_FILES += \
   $(PROJ_DIR)/mui/mui_view_dispatcher.c \
   $(PROJ_DIR)/mui/mui_scene_dispatcher.c \
   $(PROJ_DIR)/mui/mui_u8g2.c \
+  $(PROJ_DIR)/mui/u8g2_font_siji_t_6x10.c \
+  $(PROJ_DIR)/mui/u8g2_font_wqy12_t_gb2312a.c \
+  $(PROJ_DIR)/mui/u8g2_font_wqy12_t_gb2312a_lite.c \
   $(PROJ_DIR)/mui/mui_core.c \
   $(PROJ_DIR)/mui/mui_canvas.c \
   $(PROJ_DIR)/mui/mui_event.c \
   $(PROJ_DIR)/mui/mui_input.c \
   $(PROJ_DIR)/mui/mui_element.c \
   $(PROJ_DIR)/mui/mui_mem.c \
+  $(PROJ_DIR)/mui/mui_anim.c \
+  $(PROJ_DIR)/mui/mui_math.c \
   $(PROJ_DIR)/mui/view/mui_list_view.c \
   $(PROJ_DIR)/mui/view/mui_text_input.c \
   $(PROJ_DIR)/mui/view/mui_msg_box.c \
   $(PROJ_DIR)/mui/view/mui_progress_bar.c \
+  $(PROJ_DIR)/mui/view/mui_toast_view.c \
   $(PROJ_DIR)/core/mini_app_launcher.c \
   $(PROJ_DIR)/core/mini_app_registry.c \
   $(PROJ_DIR)/core/mini_app_data.c \
@@ -229,6 +234,25 @@ SRC_FILES += \
   $(PROJ_DIR)/app/amiibolink/scene/amiibolink_scene_menu.c \
   $(PROJ_DIR)/app/amiibolink/scene/amiibolink_scene_menu_mode.c \
   $(PROJ_DIR)/app/amiibolink/scene/amiibolink_scene_menu_ver.c \
+  $(PROJ_DIR)/app/amiidb/app_amiidb.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_main.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_game_list.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_amiibo_detail.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_amiibo_detail_menu.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_amiibo_search.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_fav_list.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_fav_select.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_fav_list_menu.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_data_list.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_data_select.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_data_list_menu.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_settings.c \
+  $(PROJ_DIR)/app/amiidb/scene/amiidb_scene_settings_slot_num.c \
+  $(PROJ_DIR)/app/amiidb/api/amiidb_api_slot.c \
+  $(PROJ_DIR)/app/amiidb/api/amiidb_api_fav.c \
+  $(PROJ_DIR)/app/amiidb/api/amiidb_api_db.c \
+  $(PROJ_DIR)/app/amiidb/view/amiibo_view.c \
   $(PROJ_DIR)/app/desktop/app_desktop.c \
   $(PROJ_DIR)/app/amiibo/app_amiibo.c \
   $(PROJ_DIR)/app/amiibo/view/amiibo_detail_view.c \
@@ -245,7 +269,17 @@ SRC_FILES += \
   $(PROJ_DIR)/app/settings/scene/settings_scene_version.c \
   $(PROJ_DIR)/app/settings/scene/settings_scene_sleep_timeout.c \
   $(PROJ_DIR)/app/settings/scene/settings_scene_lcd_backlight.c \
+  $(PROJ_DIR)/app/settings/scene/settings_scene_oled_contrast.c \
+  $(PROJ_DIR)/app/settings/scene/settings_scene_language.c \
+  $(PROJ_DIR)/i18n/en_US.c \
+  $(PROJ_DIR)/i18n/zh_Hans.c \
+  $(PROJ_DIR)/i18n/zh_TW.c \
+  $(PROJ_DIR)/i18n/language.c \
   $(PROJ_DIR)/hal/hal_nfc_t2t.c \
+  $(PROJ_DIR)/amiidb/db_amiibo.c \
+  $(PROJ_DIR)/amiidb/db_game.c \
+  $(PROJ_DIR)/amiidb/db_link.c \
+  $(PROJ_DIR)/amiidb/db_search.c \
   $(PROJ_DIR)/sdk/pwr_mgmt/nrf_pwr_mgmt.c \
   $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT.c \
   $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c \
@@ -273,7 +307,6 @@ SRC_FILES += \
   $(U8G2_ROOT)/u8g2_d_memory.c \
   $(U8G2_ROOT)/u8g2_d_setup.c \
   $(U8G2_ROOT)/u8g2_font.c \
-  $(U8G2_ROOT)/u8g2_fonts.c \
   $(U8G2_ROOT)/u8g2_hvline.c \
   $(U8G2_ROOT)/u8g2_input_value.c \
   $(U8G2_ROOT)/u8g2_intersection.c \
@@ -302,7 +335,8 @@ SRC_FILES += \
   $(U8G2_ROOT)/u8x8_setup.c \
   $(U8G2_ROOT)/u8x8_string.c \
   $(U8G2_ROOT)/u8x8_u16toa.c \
-  $(U8G2_ROOT)/u8x8_u8toa.c 
+  $(U8G2_ROOT)/u8x8_u8toa.c \
+  $(U8G2_ROOT)/u8x8_d_ssd1306_128x64_noname.c
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -452,10 +486,12 @@ INC_FOLDERS += \
   $(PROJ_DIR)/mui \
   $(PROJ_DIR)/mui/view \
   $(PROJ_DIR)/core \
+  $(PROJ_DIR)/ntag \
   $(PROJ_DIR)/mod \
   $(PROJ_DIR)/mod/vfs \
   $(PROJ_DIR)/mod/ble \
   $(PROJ_DIR)/mod/df \
+  $(PROJ_DIR)/amiidb \
   $(PROJ_DIR)/app/status_bar \
   $(PROJ_DIR)/app/status_bar/view \
   $(PROJ_DIR)/app/ble \
@@ -473,6 +509,10 @@ INC_FOLDERS += \
   $(PROJ_DIR)/app/amiibolink \
   $(PROJ_DIR)/app/amiibolink/view \
   $(PROJ_DIR)/app/amiibolink/scene \
+  $(PROJ_DIR)/app/amiidb \
+  $(PROJ_DIR)/app/amiidb/scene \
+  $(PROJ_DIR)/app/amiidb/view \
+  $(PROJ_DIR)/app/amiidb/api \
   $(PROJ_DIR)/sdk/pwr_mgmt \
   $(COMP_DIR)/amiitool/include \
   $(COMP_DIR)/mlib \
@@ -487,8 +527,11 @@ INC_FOLDERS += \
 LIB_FILES += \
   $(SDK_ROOT)/components/nfc/t2t_lib/nfc_t2t_lib_gcc.a \
 # Optimization flags
-OPT = -O3 -g3
-# OPT = -Os -ffunction-sections -fdata-sections
+ifneq ($(RELEASE), 1)
+OPT = -O2 -g3
+else
+OPT = -Os -ffunction-sections -fdata-sections
+endif
 # Uncomment the line below to enable link time optimization
 # OPT += -flto
 
@@ -497,7 +540,7 @@ CFLAGS += $(OPT)
 CFLAGS += -DAPP_TIMER_V2
 CFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
 #CFLAGS += -DBOARD_PCA10040
-CFLAGS += -DCUSTOM_BOARD_INC=am_board
+CFLAGS += -DCUSTOM_BOARD_INC=boards_defines
 #CFLAGS += -DCONFIG_GPIO_AS_PINRESET
 CFLAGS += -DFLOAT_ABI_HARD
 CFLAGS += -DNRF52
@@ -507,14 +550,13 @@ CFLAGS += -DNRF_SD_BLE_API_VERSION=7
 CFLAGS += -DS112
 CFLAGS += -DSOFTDEVICE_PRESENT
 CFLAGS += -DLV_LVGL_H_INCLUDE_SIMPLE 
+CFLAGS += -DBOARD_$(BOARD)
 ifneq ($(RELEASE), 1)
 CFLAGS += -DDEBUG
 CFLAGS += -DEBUG_NRF
 else
 CFLAGS += -DNDEBUG
-endif
-ifeq ($(LFS_ENABLE), 1)
-CFLAGS += -DVFS_LFS_ENABLE
+CFLAGS += -DU8G2_USE_LARGE_GB2312_FONT
 endif
 CFLAGS += -DMBEDTLS_CONFIG_FILE=\"nrf_crypto_mbedtls_config.h\"
 CFLAGS += -DM_USE_THREAD_BACKEND=0
@@ -622,3 +664,15 @@ ota:
 
 full: settingsgen
 	mergehex --merge $(OUTPUT_DIRECTORY)/settings.hex $(OUTPUT_DIRECTORY)/bootloader.hex $(SDK_ROOT)/components/softdevice/s112/hex/s112_nrf52_7.2.0_softdevice.hex $(OUTPUT_DIRECTORY)/pixljs.hex --output $(OUTPUT_DIRECTORY)/pixljs_all.hex
+
+flash_openocd:
+	openocd -f interface/cmsis-dap.cfg -c "transport select swd" -f target/nrf52.cfg -d2 -c init -c "reset init" -c halt -c "program $(OUTPUT_DIRECTORY)/pixljs.hex verify" -c "reset" -c exit
+
+flash_openocd_all:
+	openocd -f interface/cmsis-dap.cfg -c "transport select swd" -f target/nrf52.cfg -d2 -c init -c "reset init" -c halt -c "nrf51 mass_erase" -c "program $(SDK_ROOT)/components/softdevice/s112/hex/s112_nrf52_7.2.0_softdevice.hex verify" -c "program $(OUTPUT_DIRECTORY)/pixljs.hex verify" -c "reset" -c exit
+
+reset_openocd:
+	openocd -f interface/cmsis-dap.cfg -c "transport select swd" -f target/nrf52.cfg -c "init" -c "reset" -c "exit"
+
+erase_openocd:
+	openocd -f interface/cmsis-dap.cfg -c "transport select swd" -f target/nrf52.cfg -d2 -c init -c "reset init" -c halt -c "nrf51 mass_erase" -c "reset" -c exit

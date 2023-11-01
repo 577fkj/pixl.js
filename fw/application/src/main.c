@@ -74,8 +74,6 @@
 
 #include "ntag_store.h"
 
-#include "amiibo_data.h"
-
 #include "bat.h"
 #include "ble_main.h"
 
@@ -96,6 +94,7 @@
 
 #include "cache.h"
 #include "settings.h"
+#include "i18n/language.h"
 
 #define APP_SCHED_MAX_EVENT_SIZE 4 /**< Maximum size of scheduler events. */
 #define APP_SCHED_QUEUE_SIZE 16    /**< Maximum number of events in the scheduler queue. */
@@ -258,10 +257,8 @@ int main(void) {
     err_code = ntag_emu_init(&default_ntag215);
     APP_ERROR_CHECK(err_code);
 
+    //cache_clean(); //FOR TESTING
     check_wakeup_src();
-
-    //    err_code = ntag_store_init();
-    //    APP_ERROR_CHECK(err_code);
 
     err_code = settings_init();
     // we ignore error here, cause flash may not be presented or settings.bin did not exist
@@ -277,6 +274,8 @@ int main(void) {
 
     NRF_LOG_DEBUG("init done");
 
+    setLanguage(p_settings->language);
+    
     mui_t *p_mui = mui();
     mui_init(p_mui);
 
